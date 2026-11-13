@@ -122,7 +122,9 @@ def seed():
         CREATE INDEX IF NOT EXISTS docs_by_board ON documents(board_id);
         ''')
         if not c.execute('SELECT id FROM users LIMIT 1').fetchone():
-            password = secrets.token_urlsafe(13)
+            password = os.getenv('INITIAL_ADMIN_PASSWORD') or secrets.token_urlsafe(22)
+            if len(password) < 16:
+                raise RuntimeError('INITIAL_ADMIN_PASSWORD must have at least 16 characters')
             c.execute('INSERT INTO users (name,email,password_hash,role,active,created_at) VALUES (?,?,?,?,1,?)',
                       ('Yönetici','admin@local',phash(password),'admin',now()))
             first = DATA / 'ILK_GIRIS_BILGILERI.txt'
