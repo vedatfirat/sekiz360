@@ -1,0 +1,16 @@
+services:
+  pano:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8765:8765"
+    environment:
+      APP_DATA_DIR: /data
+      HOST: 0.0.0.0
+      PORT: 8765
+      # HTTPS ters vekil (reverse proxy) kurulunca true yapılmalı:
+      APP_SECURE_COOKIE: "false"
+    volumes:
+      - pano_data:/data
+volumes:
+  pano_data:
